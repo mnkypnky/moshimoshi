@@ -22,7 +22,7 @@ test('dashboard exposes a working emergency control', async () => {
   const repoRoot = path.resolve(__dirname, '..');
   const child = spawn(process.execPath, ['server.js'], {
     cwd: repoRoot,
-    env: { ...process.env, PORT: '3101', SHARE_USER_1: 'mira', SHARE_PASS_1: 'orange-ombre-1', SHARE_USER_2: 'leo', SHARE_PASS_2: 'navy-echo-2' },
+    env: { ...process.env, PORT: '3101', SHARE_USER_1: 'mnky', SHARE_PASS_1: '3018', SHARE_USER_2: 'ritk', SHARE_PASS_2: '0226' },
     stdio: ['ignore', 'pipe', 'pipe']
   });
 
@@ -51,7 +51,7 @@ test('dashboard exposes a working emergency control', async () => {
       port: 3101,
       path: '/login',
       method: 'POST'
-    }, 'username=mira&password=orange-ombre-1', {
+    }, 'username=mnky&password=3018', {
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 

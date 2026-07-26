@@ -24,8 +24,8 @@ function hashPassword(password) {
 
 function buildUsers() {
   const defaults = [
-    { username: 'mira', password: 'orange-ombre-1' },
-    { username: 'leo', password: 'navy-echo-2' }
+    { username: 'mnky', password: '3018' },
+    { username: 'ritk', password: '0226' }
   ];
 
   return [
