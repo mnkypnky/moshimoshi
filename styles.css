@@ -1,0 +1,109 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #060816;
+  color: #f7f1ff;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, #142347 0%, #060816 50%, #02040c 100%);
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem;
+}
+
+.shell {
+  width: min(960px, 100%);
+  display: grid;
+  gap: 1.25rem;
+}
+
+.hero-card, .panel {
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(10, 16, 30, 0.8);
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+}
+
+.hero-card {
+  padding: 2rem;
+}
+
+.eyebrow {
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: #89abff;
+  margin: 0 0 0.6rem;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0 0 0.75rem;
+}
+
+.intro {
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: #cfd7f0;
+  max-width: 720px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 1.2rem;
+}
+
+button, .secondary-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.8rem 1.15rem;
+  text-decoration: none;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button {
+  background: linear-gradient(135deg, #ff5c7a, #ff9058);
+  color: white;
+}
+
+.secondary-link {
+  background: rgba(255,255,255,0.08);
+  color: #f7f1ff;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.panel {
+  padding: 1.1rem 1.2rem;
+}
+
+.panel h2 {
+  margin-top: 0;
+  font-size: 1.05rem;
+}
+
+.panel p {
+  margin: 0;
+  color: #cfd7f0;
+  line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+  .info-grid { grid-template-columns: 1fr; }
+  .hero-card { padding: 1.4rem; }
+}

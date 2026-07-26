@@ -1,0 +1,17 @@
+{
+  "name": "moshimoshi-share",
+  "version": "1.0.0",
+  "description": "A simple shared-file workspace with fixed accounts and a decoy redirect flow",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.1.0",
+    "multer": "^1.4.1",
+    "sqlite3": "^5.0.1"
+  }
+}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shared workspace login</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="auth-shell">
+      <section class="card auth-card">
+        <div class="hero-copy">
+          <p class="eyebrow">Private sharing</p>
+          <h1>Shared file workspace</h1>
+          <p>Only two approved users can access this workspace. No sign-up is available.</p>
+        </div>
+        <form method="post" action="/login" class="stacked-form">
+          <label for="username">Username</label>
+          <input id="username" name="username" required autocomplete="username" />
+
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" required autocomplete="current-password" />
+
+          <button type="submit">Enter workspace</button>
+        </form>
+        <% if (error) { %>
+          <p class="error"><%= error %></p>
+        <% } %>
+      </section>
+    </main>
+  </body>
+</html>

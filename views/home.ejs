@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shared workspace</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Workspace</p>
+          <h1>Shared workspace</h1>
+          <p class="muted">Signed in as <strong><%= user.username %></strong></p>
+        </div>
+        <a class="link" href="/logout">Log out</a>
+      </header>
+
+      <section class="panel hero-panel">
+        <div>
+          <h2>Atmospheric file sharing</h2>
+          <p class="muted">Search by title, tag, or location and browse your visual archive in a calm, cinematic gallery.</p>
+        </div>
+      </section>
+
+      <section class="panel search-panel">
+        <form action="/dashboard" method="get" class="search-shell">
+          <input name="q" placeholder="Search by title, tag, or location" value="<%= searchTerm %>" />
+          <input type="hidden" name="tag" value="<%= selectedTag %>" />
+          <input type="hidden" name="location" value="<%= selectedLocation %>" />
+          <button type="submit">Search</button>
+          <a class="secondary-link" href="/dashboard">Clear</a>
+        </form>
+
+        <div class="chip-row">
+          <% if (availableTags.length === 0) { %>
+            <span class="chip">No tags yet</span>
+          <% } else { %>
+            <% availableTags.forEach((tag) => { %>
+              <a class="chip <%= selectedTag === tag ? 'active' : '' %>" href="/dashboard?tag=<%= encodeURIComponent(tag) %>&q=<%= encodeURIComponent(searchTerm) %>&location=<%= encodeURIComponent(selectedLocation) %>"><%= tag %></a>
+            <% }) %>
+          <% } %>
+        </div>
+
+        <div class="chip-row">
+          <% if (availableLocations.length === 0) { %>
+            <span class="chip">No locations yet</span>
+          <% } else { %>
+            <% availableLocations.forEach((location) => { %>
+              <a class="chip <%= selectedLocation === location ? 'active' : '' %>" href="/dashboard?location=<%= encodeURIComponent(location) %>&q=<%= encodeURIComponent(searchTerm) %>&tag=<%= encodeURIComponent(selectedTag) %>"><%= location %></a>
+            <% }) %>
+          <% } %>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <h2>Create a folder</h2>
+          <p class="muted">Keep the workspace calm and structured.</p>
+        </div>
+        <form action="/folders" method="post" class="inline-form">
+          <input name="name" placeholder="Folder name" required />
+          <input type="hidden" name="parentFolder" value="<%= folderId || '' %>" />
+          <button type="submit">Create</button>
+        </form>
+      </section>
+
+      <section class="panel composer-panel">
+        <div class="section-head">
+          <h2>Add to this space</h2>
+          <p class="muted">Drop files into the current folder, or create a folder path first and then upload.</p>
+        </div>
+        <form action="/upload" method="post" enctype="multipart/form-data" class="stacked-form" id="upload-form">
+          <div class="dropzone" id="dropzone">
+            <input type="file" name="file" id="file-input" required />
+            <p class="dropzone-title">Drop files here</p>
+            <p class="muted">or tap to browse</p>
+          </div>
+          <div class="composer-row">
+            <div class="field-group">
+              <label for="folder-select">Folder</label>
+              <select id="folder-select" name="folderId">
+                <option value="">Root</option>
+                <% folders.forEach((folder) => { %>
+                  <option value="<%= folder.id %>" <%= folder.id === folderId ? 'selected' : '' %>><%= folder.name %></option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="location">Location</label>
+              <input id="location" name="location" placeholder="e.g. Downtown studio" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label for="tags">Tags</label>
+            <input id="tags" name="tags" placeholder="travel, photos, meeting" />
+          </div>
+          <div class="composer-actions">
+            <button type="button" class="secondary" id="use-location">Use my location</button>
+            <button type="submit">Upload</button>
+          </div>
+        </form>
+        <p class="hint">Images, videos, and PDF files are supported. The current folder path is shown in the archive below.</p>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <h2>Current archive</h2>
+          <nav class="breadcrumbs" aria-label="Folder path">
+            <a class="link" href="/dashboard">Home</a>
+            <% folderPath.forEach((folder) => { %>
+              <span class="breadcrumb-separator">/</span>
+              <a class="link" href="/dashboard?folder=<%= folder.id %><%= selectedTag ? '&tag=' + encodeURIComponent(selectedTag) : '' %><%= selectedLocation ? '&location=' + encodeURIComponent(selectedLocation) : '' %><%= searchTerm ? '&q=' + encodeURIComponent(searchTerm) : '' %>"><%= folder.name %></a>
+            <% }) %>
+          </nav>
+        </div>
+
+        <h3>Folders</h3>
+        <% if (folders.length === 0) { %>
+          <p class="muted">No folders yet.</p>
+        <% } else { %>
+          <ul class="stack-list">
+            <% folders.forEach((folder) => { %>
+              <li><a class="link" href="/dashboard?folder=<%= folder.id %><%= selectedTag ? '&tag=' + encodeURIComponent(selectedTag) : '' %><%= selectedLocation ? '&location=' + encodeURIComponent(selectedLocation) : '' %><%= searchTerm ? '&q=' + encodeURIComponent(searchTerm) : '' %>"><%= folder.name %></a></li>
+            <% }) %>
+          </ul>
+        <% } %>
+
+        <h3>Files</h3>
+        <% if (files.length === 0) { %>
+          <p class="muted">No files match the current search.</p>
+        <% } else { %>
+          <div class="file-grid">
+            <% files.forEach((file) => { %>
+              <article class="file-card">
+                <div class="media-shell">
+                  <% if (file.mime_type.startsWith('image/')) { %>
+                    <img src="/files/<%= file.id %>" alt="<%= file.original_name %>" />
+                  <% } else if (file.mime_type.startsWith('video/')) { %>
+                    <video controls preload="metadata" src="/files/<%= file.id %>"></video>
+                  <% } else { %>
+                    <div class="file-fallback">PDF</div>
+                  <% } %>
+                </div>
+                <div class="card-body">
+                  <h4><%= file.original_name %></h4>
+                  <p class="muted small"><% if (file.location) { %><%= file.location %><% } else { %>No location set<% } %></p>
+                  <% const fileTags = typeof file.tags === 'string' ? JSON.parse(file.tags || '[]') : []; %>
+                  <% if (fileTags.length > 0) { %>
+                    <div class="chip-row small-row">
+                      <% fileTags.forEach((tag) => { %>
+                        <span class="chip soft"><%= tag %></span>
+                      <% }) %>
+                    </div>
+                  <% } %>
+                  <div class="card-actions">
+                    <a class="link" href="/download/<%= file.id %>">Download</a>
+                    <span class="meta">· <%= Math.round(file.size/1024) %> KB</span>
+                  </div>
+                </div>
+              </article>
+            <% }) %>
+          </div>
+        <% } %>
+      </section>
+    </main>
+
+    <button class="emergency-btn" type="button" aria-label="Open emergency video" data-emergency-video="https://www.youtube.com/watch?v=cd1xNW2apDs">!</button>
+
+    <script>
+      const dropzone = document.getElementById('dropzone');
+      const fileInput = document.getElementById('file-input');
+
+      ['dragenter', 'dragover'].forEach((eventName) => {
+        dropzone?.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropzone.classList.add('active');
+        });
+      });
+
+      ['dragleave', 'dragend', 'drop'].forEach((eventName) => {
+        dropzone?.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropzone.classList.remove('active');
+        });
+      });
+
+      dropzone?.addEventListener('drop', (event) => {
+        const files = event.dataTransfer?.files;
+        if (files && files.length) {
+          const dataTransfer = new DataTransfer();
+          Array.from(files).forEach((file) => dataTransfer.items.add(file));
+          fileInput.files = dataTransfer.files;
+        }
+      });
+
+      fileInput?.addEventListener('change', () => {
+        const label = dropzone?.querySelector('.dropzone-title');
+        if (label && fileInput.files?.length) {
+          label.textContent = `${fileInput.files.length} file${fileInput.files.length > 1 ? 's' : ''} ready`;
+        }
+      });
+
+      document.getElementById('use-location')?.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+          alert('Geolocation is unavailable on this device.');
+          return;
+        }
+        navigator.geolocation.getCurrentPosition((position) => {
+          const input = document.getElementById('location');
+          if (input) {
+            input.value = `${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`;
+          }
+        }, () => {
+          alert('Location access was denied. You can type a place name manually instead.');
+        });
+      });
+
+      const emergencyButton = document.querySelector('.emergency-btn');
+      emergencyButton?.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const videoUrl = emergencyButton.getAttribute('data-emergency-video');
+        const randomSeconds = Math.floor(Math.random() * 240) + 20;
+        const targetUrl = `${videoUrl}&t=${randomSeconds}s`;
+        window.location.assign(targetUrl);
+      });
+
+      emergencyButton?.addEventListener('touchend', (event) => {
+        event.preventDefault();
+        emergencyButton.click();
+      });
+    </script>
+  </body>
+</html>

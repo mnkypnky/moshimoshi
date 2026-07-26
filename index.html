@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Moshimoshi is now hosted on GitHub Pages with HTTPS and a secure public homepage." />
+    <title>Moshimoshi</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero-card">
+        <p class="eyebrow">Hosted • Secure • GitHub Pages</p>
+        <h1>Moshimoshi is live.</h1>
+        <p class="intro">
+          This site is now prepared for public hosting on GitHub Pages with HTTPS enabled by default.
+          The custom domain placeholder is ready, and the emergency shortcut opens the requested video at a fresh random timestamp.
+        </p>
+        <div class="actions">
+          <button id="emergency-btn" type="button">Open the video</button>
+          <a class="secondary-link" href="https://github.com" target="_blank" rel="noreferrer">GitHub repository</a>
+        </div>
+      </section>
+
+      <section class="info-grid">
+        <article class="panel">
+          <h2>Production-ready hosting</h2>
+          <p>GitHub Pages serves this site over HTTPS with no extra server maintenance required.</p>
+        </article>
+        <article class="panel">
+          <h2>Domain setup</h2>
+          <p>A CNAME file is included for the moshimoshi hostname so DNS can be pointed at the GitHub Pages endpoint.</p>
+        </article>
+        <article class="panel">
+          <h2>Secure defaults</h2>
+          <p>The site is static, low-risk, and designed for fast loading with minimal attack surface.</p>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      const button = document.getElementById('emergency-btn');
+      if (button) {
+        button.addEventListener('click', () => {
+          const randomSeconds = Math.floor(Math.random() * 240) + 20;
+          window.open(`https://www.youtube.com/watch?v=cd1xNW2apDs&t=${randomSeconds}s`, '_blank', 'noopener,noreferrer');
+        });
+      }
+    </script>
+  </body>
+</html>
