@@ -3,49 +3,93 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Moshimoshi is now hosted directly from the main branch on GitHub Pages." />
+    <meta name="description" content="A public web app experience for Moshimoshi with login, workspace browsing, and the emergency video shortcut." />
     <title>Moshimoshi</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main class="shell">
-      <section class="hero-card">
-        <p class="eyebrow">Hosted • Secure • GitHub Pages</p>
-        <h1>Moshimoshi is live.</h1>
-        <p class="intro">
-          This site is now prepared for public hosting on GitHub Pages with HTTPS enabled by default.
-          The custom domain placeholder is ready, and the emergency shortcut opens the requested video at a fresh random timestamp.
-        </p>
-        <div class="actions">
-          <button id="emergency-btn" type="button">Open the video</button>
-          <a class="secondary-link" href="https://github.com" target="_blank" rel="noreferrer">GitHub repository</a>
-        </div>
-      </section>
-
-      <section class="info-grid">
-        <article class="panel">
-          <h2>Production-ready hosting</h2>
-          <p>GitHub Pages serves this site over HTTPS with no extra server maintenance required.</p>
-        </article>
-        <article class="panel">
-          <h2>Domain setup</h2>
-          <p>A CNAME file is included for the moshimoshi hostname so DNS can be pointed at the GitHub Pages endpoint.</p>
-        </article>
-        <article class="panel">
-          <h2>Secure defaults</h2>
-          <p>The site is static, low-risk, and designed for fast loading with minimal attack surface.</p>
-        </article>
-      </section>
-    </main>
-
+    <div id="app"></div>
     <script>
-      const button = document.getElementById('emergency-btn');
-      if (button) {
-        button.addEventListener('click', () => {
-          const randomSeconds = Math.floor(Math.random() * 240) + 20;
-          window.open(`https://www.youtube.com/watch?v=cd1xNW2apDs&t=${randomSeconds}s`, '_blank', 'noopener,noreferrer');
-        });
+      const users = {
+        mnky: '3018',
+        ritk: '0226'
+      };
+
+      const app = document.getElementById('app');
+      const state = { loggedIn: false, user: null };
+
+      function render() {
+        if (!state.loggedIn) {
+          app.innerHTML = `
+            <main class="shell" id="login-screen">
+              <section class="hero-card">
+                <p class="eyebrow">Moshimoshi • Public workspace</p>
+                <h1>Welcome back</h1>
+                <p class="intro">Sign in to access the workspace experience that was previously running locally.</p>
+                <form id="login-form" class="stack">
+                  <input id="username" name="username" placeholder="Username" required />
+                  <input id="password" name="password" type="password" placeholder="Password" required />
+                  <button type="submit">Enter workspace</button>
+                </form>
+                <p id="login-error" class="error"></p>
+              </section>
+            </main>`;
+          document.getElementById('login-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const isValid = users[username] && users[username] === password;
+            if (!isValid) {
+              document.getElementById('login-error').textContent = 'Those credentials are not accepted.';
+              return;
+            }
+            state.loggedIn = true;
+            state.user = username;
+            render();
+          });
+          return;
+        }
+
+        app.innerHTML = `
+          <main class="shell" id="workspace-screen">
+            <section class="hero-card">
+              <p class="eyebrow">Workspace • ${state.user}</p>
+              <h1>Shared workspace</h1>
+              <p class="intro">This hosted version now mirrors the local experience with a login screen, workspace view, and the emergency shortcut.</p>
+              <div class="actions">
+                <button id="emergency-btn" type="button">Open the video</button>
+                <button id="logout-btn" class="secondary" type="button">Log out</button>
+              </div>
+            </section>
+            <section class="info-grid">
+              <article class="panel">
+                <h2>Access</h2>
+                <p>Friends can open this page and sign in with the published credentials.</p>
+              </article>
+              <article class="panel">
+                <h2>Experience</h2>
+                <p>The workspace view is now available directly from the public URL.</p>
+              </article>
+              <article class="panel">
+                <h2>Emergency</h2>
+                <p>The shortcut opens the requested video at a random time.</p>
+              </article>
+            </section>
+          </main>`;
+
+          document.getElementById('emergency-btn').addEventListener('click', () => {
+            const randomSeconds = Math.floor(Math.random() * 240) + 20;
+            window.open(`https://www.youtube.com/watch?v=cd1xNW2apDs&t=${randomSeconds}s`, '_blank', 'noopener,noreferrer');
+          });
+
+          document.getElementById('logout-btn').addEventListener('click', () => {
+            state.loggedIn = false;
+            state.user = null;
+            render();
+          });
       }
+
+      render();
     </script>
   </body>
 </html>
