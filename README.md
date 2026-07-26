@@ -1,22 +1,18 @@
-# Shared file workspace
+# Moshimoshi
 
-A simple local web app for two approved users to:
-- sign in with fixed credentials
-- create folders
-- upload images, videos, and PDF files
-- download files later
+A calm, atmospheric Japanese-inspired web experience designed for a polished public landing page.
 
-## Run locally
+## What this site is
 
-```bash
-cd /Users/prinks/moshimoshi
-npm install
-SHARE_USER_1='your-user-1' SHARE_PASS_1='your-pass-1' SHARE_USER_2='your-user-2' SHARE_PASS_2='your-pass-2' node server.js
-```
+Moshimoshi presents a refined, minimal digital presence with a warm editorial feel, gentle motion, and a simple call to action. It is designed to feel welcoming, modern, and quietly memorable.
 
-Then open http://localhost:3000.
+## What is included
 
-## Notes
-- There is no sign-up flow.
-- The app uses local disk storage for uploads and SQLite for metadata.
-- A decoy page is shown if authentication is bypassed or if login fails three times in a session.
+- a polished landing page experience
+- a secure static GitHub Pages deployment
+- a simple emergency-style button that opens a video at a random timestamp
+- a clean, mobile-friendly presentation with a soft, cinematic palette
+
+## Deployment
+
+This project is prepared for GitHub Pages using a static site workflow. Once the repository is connected to Pages and the workflow completes, the site is served over HTTPS.
